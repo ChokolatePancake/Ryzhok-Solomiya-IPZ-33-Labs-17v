@@ -1,13 +1,31 @@
 import 'package:flutter/material.dart';
+import '../validator.dart';
 
 class ResetPasswordScreen extends StatelessWidget {
-  const ResetPasswordScreen({super.key});
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+
+  ResetPasswordScreen({super.key});
+
+  void _showResetPasswordDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext ctx) {
+        return const AlertDialog(
+          title: Text('Message'),
+          content: Text("Need to implement"),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.0),
+        padding: EdgeInsets.symmetric(horizontal: 16.0),
+        child: Form(
+          key: _formKey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -18,40 +36,38 @@ class ResetPasswordScreen extends StatelessWidget {
                   width: 200,
                 ),
               ),
-
               const SizedBox(height: 20),
               const Center(
-                child: Text("Password Reset",
-                    style:
-                    TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                child: Text(
+                  "Password Reset",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
               ),
               const SizedBox(height: 12),
-
-              const Text('Email',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+              const Text(
+                'Email',
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+              ),
               const SizedBox(height: 12),
-              const TextField(
+              TextFormField(
+                controller: _emailController,
                 decoration: InputDecoration(
-                    labelText: 'Write you email', border: OutlineInputBorder()),
+                  labelText: 'Write your email',
+                  border: Theme.of(context).inputDecorationTheme.border,
+                ),
+                validator: validateEmail,
               ),
               const SizedBox(height: 18),
-
               Row(
                 children: [
                   Expanded(
                     child: SizedBox(
                       height: 48,
                       child: ElevatedButton(
-                        onPressed: () => {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext ctx) {
-                              return const AlertDialog(
-                                title: Text('Message'),
-                                content: Text("Need to implement"),
-                              );
-                            },
-                          ),
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            _showResetPasswordDialog(context);
+                          }
                         },
                         child: const Text("Reset Password"),
                       ),
@@ -65,9 +81,9 @@ class ResetPasswordScreen extends StatelessWidget {
                   Expanded(
                     child: SizedBox(
                       height: 48,
-                      child: ElevatedButton(
-                        onPressed: () => {
-                          Navigator.pop(context),
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.transparent,
@@ -84,7 +100,9 @@ class ResetPasswordScreen extends StatelessWidget {
                 ],
               ),
             ],
-          )),
+          ),
+        ),
+      ),
     );
   }
 }
